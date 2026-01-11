@@ -1,7 +1,7 @@
 {
   "name": "dab",
-  "version": "1.6.5",
-  "description": "Discord account botter: an source Electron UI plus Selenium runner for Discord automation. Schema validation gate, task builder and script mode, live logs, History snapshots.",
+  "version": "1.6.3",
+  "description": "Dab: Open source Electron UI plus Selenium runner for Discord automation. Schema validation gate, task builder and script mode, live logs, History snapshots.",
   "main": "main.js",
   "author": "Veok",
   "license": "MIT",

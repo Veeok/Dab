@@ -911,6 +911,56 @@ function handleCustomHandler(_cfg, handlerName) {
   return true;
 }
 
+async function ensureSessionHealthy(driver, cfg, log, taskType, sessionCtx) {
+  if (!driver) return driver;
+
+  // Enabled by default. Turn off with session_health_check=false if needed.
+  const enabled = cfg && cfg.session_health_check !== false;
+  if (!enabled) return driver;
+
+  try {
+    // Cheap ping to detect dead session transport early.
+    await driver.getCurrentUrl();
+    return driver;
+  } catch (err) {
+    if (!isRecoverableSessionError(err)) throw err;
+
+    const why = String(err?.message || err);
+    try { log && log.warn && log.warn(`Session health check failed (${why}). Restarting session...`); } catch {}
+
+    const fresh = await restartBrowserSession(driver, cfg, log, `health:${String(taskType || 'task')}`);
+
+    // In multi sessions mode, we can re-auth automatically after a restart so that tasks that
+    // assume an authenticated session do not fail due to the fresh Firefox profile.
+    const ctx = (sessionCtx && typeof sessionCtx === 'object') ? sessionCtx : {};
+    const isMulti = cfg && cfg.multi_sessions_enabled === true && ctx.boundAccount;
+    const shouldAutoLogin = isMulti && cfg.multi_sessions_auto_login !== false && String(cfg.login_url || '').trim();
+
+    const t = String(taskType || '').trim();
+    const skipAuto = (t === 'LOGIN' || t === 'LOGOUT');
+
+    if (shouldAutoLogin && !skipAuto) {
+      const acc = ctx.boundAccount;
+      if (acc && String(acc.password || '').trim()) {
+        try {
+          log.info(`Re-authenticating after session restart as ${describeAccount(acc)}`);
+          await navigateTo(fresh, cfg, log, cfg.login_url);
+          await doLogin(fresh, cfg, log, acc);
+        } catch (e2) {
+          try { log && log.warn && log.warn(`Re-auth after restart failed: ${String(e2?.message || e2)}`); } catch {}
+          try {
+            const email = normalizeEmail(acc.email || '');
+            await saveScreenshot(fresh, cfg, log, `health_reauth_${email.replace(/[^a-z0-9]+/g, '_')}`);
+          } catch {}
+        }
+      }
+    }
+
+    return fresh;
+  }
+}
+
+
 async function runTask(driver, cfg, log, task, state, oneShotRan, sessionCtx, attempt = 0) {
   const id = String(task.id || 'task');
   const type = String(task.type || '').trim();
@@ -924,6 +974,8 @@ async function runTask(driver, cfg, log, task, state, oneShotRan, sessionCtx, at
     const ok = handleCustomHandler(cfg, task.check_handler);
     if (!ok) return { ran: false, success: true, driver };
   }
+
+  driver = await ensureSessionHealthy(driver, cfg, log, type, ctx);
 
   try {
     switch (type) {
