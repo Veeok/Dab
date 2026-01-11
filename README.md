@@ -1,4 +1,4 @@
-# Dab
+# Discord account botter
 
 Dab is an Electron UI plus a Selenium runner (`index.js`) for Discord automation.
 
