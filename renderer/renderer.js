@@ -776,6 +776,19 @@ function showToast({ text, actionText, onAction, timeoutMs = 6000 } = {}) {
   const toast = document.createElement("div");
   toast.className = "toast";
 
+  const removeToast = () => {
+    if (toast.parentNode) toast.parentNode.removeChild(toast);
+  };
+
+  const dismissToast = () => {
+    if (!toast.isConnected) return;
+    if (toast.classList.contains("is-leaving")) return;
+    toast.classList.add("is-leaving");
+    const done = () => removeToast();
+    toast.addEventListener("animationend", done, { once: true });
+    window.setTimeout(done, 260);
+  };
+
   const msg = document.createElement("div");
   msg.className = "toast-text";
   msg.textContent = String(text || "");
@@ -792,7 +805,11 @@ function showToast({ text, actionText, onAction, timeoutMs = 6000 } = {}) {
     btn.textContent = String(actionText);
     btn.addEventListener("click", () => {
       try { onAction(); } catch {}
-      host.innerHTML = "";
+      if (__toastTimer) {
+        clearTimeout(__toastTimer);
+        __toastTimer = null;
+      }
+      dismissToast();
     });
     actions.appendChild(btn);
   }
@@ -801,14 +818,20 @@ function showToast({ text, actionText, onAction, timeoutMs = 6000 } = {}) {
   close.type = "button";
   close.className = "btn btn-mini";
   close.textContent = "Dismiss";
-  close.addEventListener("click", () => { host.innerHTML = ""; });
+  close.addEventListener("click", () => {
+    if (__toastTimer) {
+      clearTimeout(__toastTimer);
+      __toastTimer = null;
+    }
+    dismissToast();
+  });
   actions.appendChild(close);
 
   toast.appendChild(actions);
   host.appendChild(toast);
 
   __toastTimer = setTimeout(() => {
-    host.innerHTML = "";
+    dismissToast();
     __toastTimer = null;
   }, Math.max(1500, Number(timeoutMs) || 6000));
 }

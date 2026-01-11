@@ -1501,6 +1501,12 @@ textarea.input{
   display: flex;
   align-items: center;
   gap: 12px;
+  animation: toastIn 200ms ease-out;
+  will-change: transform, opacity;
+}
+
+.toast.is-leaving{
+  animation: toastOut 160ms ease-in;
 }
 
 .toast-text{
@@ -1733,6 +1739,16 @@ details[open].doc-acc .doc-acc-caret{
   to{ opacity: 1; transform: scale(1); }
 }
 
+@keyframes toastIn{
+  from{ opacity: 0; transform: translateY(8px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastOut{
+  from{ opacity: 1; transform: translateY(0); }
+  to{ opacity: 0; transform: translateY(8px); }
+}
+
 .item.anim-pop{
   animation: popIn 200ms ease-out;
 }
@@ -1907,7 +1923,8 @@ details[open].doc-acc .doc-acc-caret{
 @media (prefers-reduced-motion: reduce){
   .view.is-entering,
   .view.is-leaving,
-  .anim-pop{
+  .anim-pop,
+  .toast{
     animation: none !important;
   }
 
@@ -1938,4 +1955,3 @@ details[open].doc-acc .doc-acc-caret{
   padding: 8px 10px;
   font-size: 13px;
 }
-
