@@ -1,4 +1,4 @@
-# Discord account botter
+# Dab
 
 Dab is an open source desktop app for building and running Discord automation workflows.
 
@@ -353,3 +353,10 @@ Change it in **General → Theme**.
 - License. MIT
 - Author. Veok
 - Built with Electron, AJV, selenium-webdriver
+
+
+## Cross-platform packaging notes
+
+- Linux AppImage and deb should be built on Linux (or via Docker on Windows): `npm run dist:linux:docker`.
+- macOS builds should be produced on macOS (local or CI).
+- This repo uses Option B: geckodriver is bundled per platform and is downloaded automatically during `electron-builder` (beforePack hook). You can prefetch drivers with `npm run fetch:drivers`.

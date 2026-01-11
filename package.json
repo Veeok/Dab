@@ -13,7 +13,9 @@
     "dist": "electron-builder",
     "dist:win": "electron-builder --win",
     "dist:mac": "electron-builder --mac",
-    "dist:linux": "electron-builder --linux"
+    "dist:linux": "electron-builder --linux",
+    "fetch:drivers": "node scripts/fetch-drivers.js --all",
+    "dist:linux:docker": "docker run --rm -it -v \"%cd%:/project\" -w /project -e ELECTRON_CACHE=\"/project/.cache/electron\" -e ELECTRON_BUILDER_CACHE=\"/project/.cache/electron-builder\" electronuserland/builder:latest bash -lc \"npm ci && npm run dist:linux\""
   },
   "dependencies": {
     "ajv": "^8.17.1",
@@ -33,13 +35,21 @@
     "files": [
       "**/*",
       "!dist/**",
-      "!test/**"
+      "!test/**",
+      "!drivers/**",
+      "!geckodriver"
     ],
     "win": {
       "target": [
         "nsis"
       ],
-      "icon": "assets/DAB.ico"
+      "icon": "assets/DAB.ico",
+      "extraResources": [
+        {
+          "from": "drivers/win32-x64/geckodriver.exe",
+          "to": "drivers/win32-x64/geckodriver.exe"
+        }
+      ]
     },
     "nsis": {
       "oneClick": false,
@@ -49,6 +59,16 @@
       "target": [
         "dmg",
         "zip"
+      ],
+      "extraResources": [
+        {
+          "from": "drivers/darwin-x64/geckodriver",
+          "to": "drivers/darwin-x64/geckodriver"
+        },
+        {
+          "from": "drivers/darwin-arm64/geckodriver",
+          "to": "drivers/darwin-arm64/geckodriver"
+        }
       ]
     },
     "linux": {
@@ -56,10 +76,15 @@
         "AppImage",
         "deb"
       ],
-      "category": "Utility"
+      "category": "Utility",
+      "icon": "assets/DABwhiteON.png",
+      "extraResources": [
+        {
+          "from": "drivers/linux-x64/geckodriver",
+          "to": "drivers/linux-x64/geckodriver"
+        }
+      ]
     },
-    "extraResources": [
-      "geckodriver"
-    ]
+    "beforePack": "./scripts/ensure-drivers.js"
   }
 }
