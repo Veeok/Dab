@@ -1,0 +1,26 @@
+# deps
+node_modules/
+
+# build outputs
+dist/
+out/
+build/
+release/
+releases/
+
+# packaged artifacts
+*.zip
+*.exe
+*.msi
+*.dmg
+*.AppImage
+
+# logs and OS junk
+*.log
+.DS_Store
+Thumbs.db
+
+# local configs and secrets
+config.json
+config_history/
+.env

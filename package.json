@@ -1,0 +1,65 @@
+{
+  "name": "dab",
+  "version": "1.4.3",
+  "description": "Discord account botter: an source Electron UI plus Selenium runner for Discord automation. Schema validation gate, task builder and script mode, live logs, History snapshots.",
+  "main": "main.js",
+  "author": "Veok",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "selenium-webdriver": "^4.23.1"
+  },
+  "devDependencies": {
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.yourorg.dab",
+    "productName": "Dab",
+    "asar": true,
+    "asarUnpack": [
+      "**/node_modules/selenium-webdriver/bin/**"
+    ],
+    "files": [
+      "**/*",
+      "!dist/**",
+      "!test/**"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "assets/DAB.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility"
+    },
+    "extraResources": [
+      "geckodriver"
+    ]
+  }
+}

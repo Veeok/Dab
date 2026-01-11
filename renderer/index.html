@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self';"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dab</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" aria-label="Navigation sidebar">
+        <div class="app-badge" aria-label="App badge">
+          <div class="app-badge-icon" aria-hidden="true">
+            <img src="../assets/DABwhiteON.png" alt="" />
+          </div>
+          <div class="app-badge-text">
+            <div class="app-name">Dab</div>
+            <div class="app-sub">Config Editor</div>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Primary navigation">
+          <button class="nav-item is-active" type="button" data-view="validation">
+            <span class="nav-dot" aria-hidden="true"></span>
+            Validation
+          </button>
+          <button class="nav-item" type="button" data-view="general">
+            <span class="nav-dot" aria-hidden="true"></span>
+            General
+          </button>
+          <button class="nav-item" type="button" data-view="accounts">
+            <span class="nav-dot" aria-hidden="true"></span>
+            Accounts
+          </button>
+          <button class="nav-item" type="button" data-view="tasks">
+            <span class="nav-dot" aria-hidden="true"></span>
+            Tasks
+          </button>
+          <button class="nav-item" type="button" data-view="advanced">
+            <span class="nav-dot" aria-hidden="true"></span>
+            Advanced tasking
+          </button>
+          <button class="nav-item" type="button" data-view="automation">
+            <span class="nav-dot" aria-hidden="true"></span>
+            Automation
+          </button>
+          <button class="nav-item" type="button" data-view="history">
+            <span class="nav-dot" aria-hidden="true"></span>
+            History
+          </button>
+          <button class="nav-item" type="button" data-view="instructions">
+            <span class="nav-dot" aria-hidden="true"></span>
+            Instructions
+          </button>
+        </nav>
+
+        <div class="sidebar-footer" aria-label="Sidebar actions">
+          <button class="btn btn-primary" id="openBtn" type="button"><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v.64c.57.265.94.876.856 1.546l-.64 5.124A2.5 2.5 0 0 1 12.733 15H3.266a2.5 2.5 0 0 1-2.481-2.19l-.64-5.124A1.5 1.5 0 0 1 1 6.14zM2 6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5a.5.5 0 0 0-.5.5zm-.367 1a.5.5 0 0 0-.496.562l.64 5.124A1.5 1.5 0 0 0 3.266 14h9.468a1.5 1.5 0 0 0 1.489-1.314l.64-5.124A.5.5 0 0 0 14.367 7z"/></svg></span><span class="btn-text">Import configuration</span></button>
+          <div class="spacer"></div>
+          <div class="mini-row">
+            <span class="pill pill-muted" id="runningPill" aria-label="Automation status">Idle</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main" aria-label="Main content">
+        
+        <header class="topbar" aria-label="Top bar">
+          <div class="fileline" aria-label="Config file">
+            <div class="fileline-row">
+              <div class="fileline-name" id="fileName">(no file)</div>
+              <span class="pill pill-muted" id="configStatePill" aria-label="Config status">Not loaded</span>
+            </div>
+            <div class="fileline-row fileline-row2">
+              <div class="fileline-path" id="filePath" title="Current config path">(no file opened)</div>
+              <div class="fileline-tools" aria-label="File tools">
+                <button class="icon-btn" id="copyPathBtn" type="button" title="Copy path" aria-label="Copy path"><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/></svg></span></button>
+                <button class="icon-btn" id="openFolderBtn" type="button" title="Open folder" aria-label="Open folder"><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v.64c.57.265.94.876.856 1.546l-.64 5.124A2.5 2.5 0 0 1 12.733 15H3.266a2.5 2.5 0 0 1-2.481-2.19l-.64-5.124A1.5 1.5 0 0 1 1 6.14zM2 6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5a.5.5 0 0 0-.5.5zm-.367 1a.5.5 0 0 0-.496.562l.64 5.124A1.5 1.5 0 0 0 3.266 14h9.468a1.5 1.5 0 0 0 1.489-1.314l.64-5.124A.5.5 0 0 0 14.367 7z"/></svg></span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="topbar-actions" aria-label="Top bar actions">
+            <button class="btn btn-primary" id="saveBtn" type="button" disabled><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M11 2H9v3h2z"/><path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/></svg></span><span class="btn-text">Save</span></button>
+
+            <div class="menu-wrap">
+              <button class="btn btn-secondary" id="actionsBtn" type="button" disabled aria-haspopup="true" aria-expanded="false"><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/></svg></span><span class="btn-text">Actions</span></button>
+              <div class="menu" id="actionsMenu" role="menu" aria-label="Actions menu">
+                <button class="menu-item" id="validateBtn" type="button" role="menuitem" disabled><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0"/><path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/></svg></span><span class="btn-text">Validate</span></button>
+                <button class="menu-item" id="exportBtn" type="button" role="menuitem" disabled><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/></svg></span><span class="btn-text">Export sanitized</span></button>
+                <button class="menu-item" id="exportFullBtn" type="button" role="menuitem" disabled><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/></svg></span><span class="btn-text">Export full</span></button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="banner banner-muted" id="banner" role="status" aria-live="polite">
+          A default configuration is created automatically. Use Import configuration to load another file.
+        </div>
+
+        <div class="view-stack" id="viewStack">
+
+        <section class="view is-active" id="view-validation" aria-labelledby="validation-title">
+          <h1 class="view-title" id="validation-title">Validation</h1>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Status</div>
+              <div class="card-meta" id="validationMeta">No file loaded.</div>
+            </div>
+            <div class="card-body">
+              <div class="status-row">
+                <div class="status-pill status-pill-muted" id="validationPill">Not validated</div>
+                <div class="status-text" id="validationText">Load a config file to validate.</div>
+              </div>
+
+              <div class="issues" aria-label="Validation issues">
+                <div class="issues-head">
+                  <div class="issues-title">Issues</div>
+                  <div class="issues-meta" id="issuesMeta"></div>
+                </div>
+                <div class="empty-state" id="issuesEmpty">
+                  <div class="empty-title">No issues found</div>
+                  <div class="empty-sub">Next actions: Export or Run.</div>
+                  <div class="empty-actions">
+                    <button class="btn btn-mini" id="issuesEmptyExportBtn" type="button">Export sanitized</button>
+                    <button class="btn btn-mini" id="issuesEmptyGoRunBtn" type="button">Go to Automation</button>
+                  </div>
+                </div>
+                <div class="issues-list" id="issuesList" role="list"></div>
+              </div>
+
+              <div class="hint">
+                This UI edits and validates config.json. It can also run index.js in a separate process using DAB_CONFIG_PATH.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-general" aria-labelledby="general-title">
+          <h1 class="view-title" id="general-title">General</h1>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Settings</div>
+              <div class="card-meta">Values are written to config.json exactly.</div>
+            </div>
+
+            <div class="card-body">
+              <div class="form-grid">
+                <label class="field">
+                  <div class="field-label-row">
+                    <div class="field-label">Server ID</div>
+                    <button class="icon-btn" id="copyServerIdBtn" type="button" title="Copy" aria-label="Copy Server ID"><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/></svg></span></button>
+                  </div>
+                  <input class="input" id="server_id" autocomplete="off" spellcheck="false" placeholder="e.g. 1234567890" />
+                  <div class="field-hint">Optional. Discord snowflake (usually 17–19 digits). Accepts string or number.</div>
+                </label>
+
+                <label class="field">
+                  <div class="field-label-row">
+                    <div class="field-label">Channel ID</div>
+                    <button class="icon-btn" id="copyChannelIdBtn" type="button" title="Copy" aria-label="Copy Channel ID"><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/></svg></span></button>
+                  </div>
+                  <input class="input" id="channel_id" autocomplete="off" spellcheck="false" placeholder="e.g. 1234567890" />
+                  <div class="field-hint">Optional. Discord snowflake (usually 17–19 digits). Accepts string or number.</div>
+                </label>
+
+                <label class="field">
+                  <div class="field-label">Theme</div>
+                  <div id="uiThemeSelect"></div>
+                  <div class="field-hint">System follows Windows. AMOLED is a pure-black variant for OLED screens.</div>
+                </label>
+
+
+                <label class="field">
+                  <div class="field-label">Tasks interval (ms)</div>
+                  <input class="input" id="tasks_interval" type="number" min="50" step="1" placeholder="1000" />
+                  <div class="field-hint">Milliseconds between loop cycles when <span class="kbd">LOOP_AUTOMATION</span> is used. Minimum 50.</div>
+                </label>
+
+                
+
+                <label class="field field-inline">
+                  <div class="field-label">No login delay</div>
+                  <div class="toggle">
+                    <input id="no_login_delay" type="checkbox" />
+                    <span class="toggle-ui" aria-hidden="true"></span>
+                    <span class="toggle-label">Skip extra login delays</span>
+                  </div>
+                </label>
+
+
+                <label class="field field-inline">
+                  <div class="field-label">Run enabled</div>
+                  <div class="toggle">
+                    <input id="run_enabled" type="checkbox" />
+                    <span class="toggle-ui" aria-hidden="true"></span>
+                    <span class="toggle-label">Allow automation to run</span>
+                  </div>
+                  <div class="field-hint">Master kill switch. Keeps config intact but prevents automation from running.</div>
+                </label>
+
+                <label class="field field-inline">
+                  <div class="field-label">Headless</div>
+                  <div class="toggle">
+                    <input id="headless" type="checkbox" />
+                    <span class="toggle-ui" aria-hidden="true"></span>
+                    <span class="toggle-label">Run Firefox headless</span>
+                  </div>
+                  <div class="field-hint">Recommended for servers. Keep false for debugging.</div>
+                </label>
+
+                <label class="field">
+                  <div class="field-label">Jitter</div>
+                  <input class="input" id="jitter_ms" inputmode="numeric" placeholder="0" />
+                  <div class="field-hint">Adds random delay to each tasks loop. Actual interval = tasks_interval + rand(0..jitter_ms).</div>
+                </label>
+
+                <label class="field field-inline">
+                  <div class="field-label">Human typing</div>
+                  <div class="toggle">
+                    <input id="human_typing_enabled" type="checkbox" />
+                    <span class="toggle-ui" aria-hidden="true"></span>
+                    <span class="toggle-label">Type text with per-character delays</span>
+                  </div>
+                  <div class="field-hint">Applies to credentials, Send message, Slash command, Send emoji, and Fill when Fast typing is off.</div>
+                </label>
+
+                <label class="field">
+                  <div class="field-label">Typing delay min</div>
+                  <input class="input" id="typing_delay_ms_min" inputmode="numeric" placeholder="70" />
+                  <div class="field-hint">Minimum milliseconds between characters when Human typing is enabled.</div>
+                </label>
+
+                <label class="field">
+                  <div class="field-label">Typing delay max</div>
+                  <input class="input" id="typing_delay_ms_max" inputmode="numeric" placeholder="160" />
+                  <div class="field-hint">Maximum milliseconds between characters. Set close to min for more consistent typing.</div>
+                </label>
+
+                <label class="field">
+                  <div class="field-label">Log level</div>
+                  <select class="input" id="log_level">
+                    <option value="error">error</option>
+                    <option value="warn">warn</option>
+                    <option value="info">info</option>
+                    <option value="debug">debug</option>
+                  </select>
+                  <div class="field-hint">Controls console verbosity and the log panel filter.</div>
+                </label>
+
+                <label class="field field-inline">
+                  <div class="field-label">Screenshot on error</div>
+                  <div class="toggle">
+                    <input id="screenshot_on_error" type="checkbox" />
+                    <span class="toggle-ui" aria-hidden="true"></span>
+                    <span class="toggle-label">Save screenshots on task failure</span>
+                  </div>
+                  <div class="field-hint">When a task fails, saves a screenshot for quick diagnosis.</div>
+                </label>
+
+                <label class="field">
+                  <div class="field-label">Element wait timeout</div>
+                  <input class="input" id="element_wait_timeout_ms" inputmode="numeric" placeholder="30000" />
+                  <div class="field-hint">Maximum time to wait for key Discord UI elements to appear, in milliseconds.</div>
+                </label>
+              </div>
+
+              <details class="legacy" id="generalLegacy">
+                <summary>Legacy settings (deprecated)</summary>
+                <div class="legacy-body">
+                  <label class="field">
+                  <div class="field-label">Account switch interval</div>
+                  <input class="input" id="account_switch_interval" inputmode="numeric" placeholder="0" />
+                  <div class="field-hint">Legacy. The runner ignores this. Use a <span class="kbd">SWITCH_ACCOUNT</span> task instead.</div>
+                </label>
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-accounts" aria-labelledby="accounts-title">
+          <div class="view-head">
+            <h1 class="view-title" id="accounts-title">Accounts</h1>
+            <div class="view-actions">
+              <button class="btn btn-secondary" id="accountsToggleAllBtn" type="button" disabled>Collapse all</button>
+              <button class="btn btn-secondary" id="addAccountBtn" type="button" disabled>Add account</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Multiple account control</div>
+              <div class="card-meta">Run tasks across multiple accounts in parallel sessions.</div>
+            </div>
+            <div class="card-body">
+              <label class="field field-inline">
+                <div class="field-label">Multi sessions</div>
+                <div class="toggle">
+                  <input id="multi_sessions_enabled" type="checkbox" />
+                  <span class="toggle-ui" aria-hidden="true"></span>
+                  <span class="toggle-label">Run selected accounts in sync</span>
+                </div>
+                <div class="field-hint">When enabled, the runner creates one Firefox session per selected account, then executes each task on all sessions at the same time.</div>
+              </label>
+
+              <label class="field">
+                <div class="field-label-row">
+                  <div class="field-label">Max parallel sessions</div>
+                  <label class="mini-check">
+                    <input id="multi_sessions_max_parallel_unlimited" type="checkbox" />
+                    <span>Unlimited</span>
+                  </label>
+                </div>
+                <input class="input" id="multi_sessions_max_parallel" inputmode="numeric" placeholder="2" />
+                <div class="field-hint">Optional. Limits how many sessions execute each task at once.</div>
+              </label>
+
+              <div class="field">
+                <div class="field-label">Selected accounts</div>
+                <div class="mini-row" style="gap: 8px; margin-bottom: 8px;">
+                  <button class="btn btn-mini" id="multi_sessions_select_all" type="button">Select all enabled</button>
+                  <button class="btn btn-mini" id="multi_sessions_clear" type="button">Clear</button>
+                </div>
+                <div class="checklist" id="multi_sessions_accounts" aria-label="Multi session account selection"></div>
+                <div class="field-hint">Leave empty to use all enabled accounts.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Account list</div>
+              <div class="card-meta">Passwords are stored in plain text in config.json. Reveal only when needed.</div>
+            </div>
+            <div class="card-body">
+              <div class="toolbar" aria-label="Account list tools">
+                <input class="input input-mini" id="accountsSearch" autocomplete="off" spellcheck="false" placeholder="Search accounts…" />
+                <select class="input input-mini" id="accountsFilter">
+                  <option value="all">All</option>
+                  <option value="enabled">Enabled</option>
+                  <option value="disabled">Disabled</option>
+                </select>
+              </div>
+              <div class="list" id="accounts" aria-label="Accounts list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-tasks" aria-labelledby="tasks-title">
+          <div class="view-head">
+            <h1 class="view-title" id="tasks-title">Tasks</h1>
+            <div class="view-actions">
+              <button class="btn btn-secondary" id="tasksToggleAllBtn" type="button" disabled>Collapse all</button>
+              <button class="btn btn-secondary" id="addTaskBtn" type="button" disabled>Add task</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Task list</div>
+              <div class="card-meta">Each task has a type specific set of required fields.</div>
+            </div>
+            <div class="card-body">
+              <div class="toolbar" aria-label="Task list tools">
+                <input class="input input-mini" id="tasksSearch" autocomplete="off" spellcheck="false" placeholder="Search tasks…" />
+                <select class="input input-mini" id="tasksFilterType"></select>
+                <select class="input input-mini" id="tasksFilterAccount"></select>
+                <select class="input input-mini" id="tasksFilterState">
+                  <option value="all">All</option>
+                  <option value="enabled">Enabled only</option>
+                  <option value="disabled">Disabled only</option>
+                  <option value="issues">Has issues</option>
+                </select>
+              </div>
+              <div class="list" id="tasks" aria-label="Tasks list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-advanced" aria-labelledby="advanced-title">
+          <div class="view-head">
+            <h1 class="view-title" id="advanced-title">Advanced tasking</h1>
+            <div class="view-actions">
+              <button class="btn btn-secondary" id="scriptFromTasksBtn" type="button" disabled>Load from Tasks</button>
+              <button class="btn btn-primary" id="applyScriptBtn" type="button" disabled>Apply to Tasks</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Line-based task editor</div>
+              <div class="card-meta" id="advancedMeta">One task per line.</div>
+            </div>
+            <div class="card-body">
+              <label class="field field-inline">
+                <div class="field-label">Script</div>
+                <div class="code-editor" aria-label="Advanced tasking editor">
+                  <div class="code-gutter" id="advancedGutter" aria-hidden="true"></div>
+                  <textarea class="input input-code" id="advancedScript" spellcheck="false" placeholder="# One task per line
+LOGIN account=\"user@example.com\"
+NAVIGATE url=\"https://discord.com/channels/...\"
+SEND_MESSAGE url=\"https://discord.com/channels/...\" message=\"Hello\"
+WAIT seconds=2
+LOOP_AUTOMATION"></textarea>
+                </div>
+                <div class="field-hint">Syntax: TYPE key=value key=value. Use quotes for spaces. Lines starting with # or // are ignored.</div>
+              </label>
+
+              <div class="errors" aria-label="Advanced tasking errors">
+                <div class="errors-title">Parse errors</div>
+                <ul class="errors-list" id="advancedErrors"></ul>
+              </div>
+
+              <div class="hint">
+                This editor generates the same <span class="kbd">tasks</span> array used by the runner. It does not add a new runtime.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-automation" aria-labelledby="automation-title">
+          <div class="view-head">
+            <h1 class="view-title" id="automation-title">Automation</h1>
+            <div class="view-actions">
+              <button class="btn btn-primary" id="runBtn" type="button" disabled>Run</button>
+              <button class="btn btn-danger" id="stopBtn" type="button" disabled>Stop</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Run status</div>
+              <div class="card-meta">Runs index.js using the currently open config path.</div>
+            </div>
+            <div class="card-body">
+              <div class="status-row">
+                <div class="status-pill status-pill-muted" id="runStatus">Not running</div>
+                <div class="status-text" id="runStatusText">Start the automation to view logs here.</div>
+              </div>
+
+              <div class="readiness" id="runReadiness" aria-label="Run readiness"></div>
+
+              <div class="log-toolbar" aria-label="Log tools">
+                <input class="input input-mini" id="logSearch" autocomplete="off" spellcheck="false" placeholder="Search logs…" />
+                <select class="input input-mini" id="logLevelSelect">
+                  <option value="error">error</option>
+                  <option value="warn">warn</option>
+                  <option value="info" selected>info</option>
+                  <option value="debug">debug</option>
+                </select>
+                <label class="mini-check">
+                  <input id="logAutoScroll" type="checkbox" checked />
+                  <span>Auto scroll</span>
+                </label>
+                <button class="btn btn-mini" id="logCopyBtn" type="button">Copy</button>
+                <button class="btn btn-mini" id="logClearBtn" type="button">Clear</button>
+              </div>
+
+              <div class="log-view" id="runLog" aria-label="Automation log"></div>
+
+              <div class="hint">
+                The process is launched with DAB_CONFIG_PATH and a PATH that includes a bundled geckodriver, if present.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-history" aria-labelledby="history-title">
+          <div class="view-head">
+            <h1 class="view-title" id="history-title">History</h1>
+            <div class="view-actions">
+              <button class="btn btn-secondary" id="historyRefreshBtn" type="button" disabled>Refresh</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Saved versions</div>
+              <div class="card-meta" id="historyMeta">Snapshots are created on each save.</div>
+            </div>
+            <div class="card-body">
+              <div class="hint">
+                Reverting will overwrite your current config.json. A safety snapshot is created before restore.
+              </div>
+              <div class="list" id="historyList" aria-label="Config history list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-instructions" aria-labelledby="instructions-title">
+          <h1 class="view-title" id="instructions-title">Instructions</h1>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">How to use this app</div>
+              <div class="card-meta">Step-by-step operator guide.</div>
+            </div>
+            <div class="card-body">
+              
+<div class="doc" id="instructionsDoc">
+  <div class="doc-top">
+    <button class="btn btn-mini" id="instrToggleAllBtn" type="button">Collapse all</button>
+  </div>
+
+  <details class="doc-acc" open>
+    <summary class="doc-acc-sum">
+      <span>About</span>
+      <span class="doc-acc-meta" id="aboutMeta"></span>
+      <span class="doc-acc-caret icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/></svg></span>
+    </summary>
+    <div class="doc-acc-body">
+      <div class="doc-block">
+        <div class="doc-sub"><span id="aboutAppName">Dab</span> <span class="muted">v<span id="aboutAppVersion"></span></span></div>
+        <div class="doc-p" id="aboutAppDesc">Electron UI to view, validate, and edit Dab config.json safely.</div>
+        <div class="doc-p">Created by <span id="aboutAppAuthor">Veok</span>. License: <span id="aboutAppLicense">MIT</span>.</div>
+      </div>
+
+      <div class="doc-block">
+        <div class="doc-sub">What it does</div>
+        <ul class="doc-list">
+          <li>Edits and validates <span class="kbd">config.json</span>.</li>
+          <li>Runs <span class="kbd">index.js</span> with <span class="kbd">DAB_CONFIG_PATH</span> pointing to your file.</li>
+          <li>Supports single session and Multi sessions (one Firefox session per account).</li>
+        </ul>
+      </div>
+    </div>
+  </details>
+
+  <details class="doc-acc" open>
+    <summary class="doc-acc-sum">
+      <span>Quick start</span>
+      <span class="doc-acc-caret icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/></svg></span>
+    </summary>
+    <div class="doc-acc-body">
+      <ol class="doc-steps">
+        <li>On first launch, Dab creates and loads a default configuration automatically. Optional. Use <span class="kbd">Import configuration</span> to load another file.</li>
+        <li>Fill <button class="btn btn-mini" type="button" data-goto="general">General</button>, <button class="btn btn-mini" type="button" data-goto="accounts">Accounts</button>, and <button class="btn btn-mini" type="button" data-goto="tasks">Tasks</button>.</li>
+        <li>Use <button class="btn btn-mini" type="button" data-goto="validation">Validation</button> to review errors and warnings. Use <span class="kbd">Go to setting</span> on each issue.</li>
+        <li>Click <span class="kbd">Save</span>. This writes config.json and creates a History snapshot.</li>
+        <li>Go to <button class="btn btn-mini" type="button" data-goto="automation">Automation</button> and click <span class="kbd">Run</span>.</li>
+      </ol>
+    </div>
+  </details>
+
+  <details class="doc-acc">
+    <summary class="doc-acc-sum">
+      <span>Validation and saving</span>
+      <span class="doc-acc-caret icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/></svg></span>
+    </summary>
+    <div class="doc-acc-body">
+      <ul class="doc-list">
+        <li>The header status pill shows one combined state such as <span class="kbd">Valid, unsaved</span> or <span class="kbd">Invalid, unsaved</span>.</li>
+        <li>Use <span class="kbd">Actions → Validate</span> after significant edits.</li>
+        <li>Fix errors first. Warnings are usually safe, but can reduce automation reliability.</li>
+        <li>Every Save creates a snapshot in <button class="btn btn-mini" type="button" data-goto="history">History</button>.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="doc-acc">
+    <summary class="doc-acc-sum">
+      <span>Accounts</span>
+      <span class="doc-acc-caret icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/></svg></span>
+    </summary>
+    <div class="doc-acc-body">
+      <ul class="doc-list">
+        <li>Passwords are masked by default. Reveal only when needed.</li>
+        <li>Multi sessions runs the same task list on multiple accounts. Each selected account uses an isolated Firefox session.</li>
+        <li>Use <span class="kbd">Unlimited</span> to remove the cap, or set <span class="kbd">Max parallel sessions</span> to reduce resource usage.</li>
+        <li>Use the search box when managing many accounts.</li>
+      </ul>
+      <div class="doc-actions">
+        <button class="btn btn-mini" type="button" data-goto="accounts">Go to Accounts</button>
+      </div>
+    </div>
+  </details>
+
+  <details class="doc-acc">
+    <summary class="doc-acc-sum">
+      <span>Tasks</span>
+      <span class="doc-acc-caret icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/></svg></span>
+    </summary>
+    <div class="doc-acc-body">
+      <ul class="doc-list">
+        <li>Use <span class="kbd">Task name</span> to make the list readable. IDs are internal.</li>
+        <li>Use search and filters to find tasks quickly.</li>
+        <li>For <span class="kbd">UPLOAD_FILE</span>, use the picker to add one or more files and remove with ✕.</li>
+        <li><span class="kbd">LOOP_AUTOMATION</span> repeats the list. Without it, the run ends after the last task.</li>
+      </ul>
+      <div class="doc-actions">
+        <button class="btn btn-mini" type="button" data-goto="tasks">Go to Tasks</button>
+      </div>
+    </div>
+  </details>
+
+  <details class="doc-acc">
+    <summary class="doc-acc-sum">
+      <span>Automation and logs</span>
+      <span class="doc-acc-caret icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/></svg></span>
+    </summary>
+    <div class="doc-acc-body">
+      <ul class="doc-list">
+        <li>Run is gated. If the config is invalid or unsaved, the Automation tab will show what to fix.</li>
+        <li>Logs are color-coded by level: info, debug, warning, error.</li>
+        <li>Use Search and Copy to extract relevant lines quickly.</li>
+      </ul>
+      <div class="doc-actions">
+        <button class="btn btn-mini" type="button" data-goto="automation">Go to Automation</button>
+      </div>
+    </div>
+  </details>
+
+  <details class="doc-acc">
+    <summary class="doc-acc-sum">
+      <span>Troubleshooting</span>
+      <span class="doc-acc-caret icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/></svg></span>
+    </summary>
+    <div class="doc-acc-body">
+      <div class="doc-block">
+        <div class="doc-sub">Common issues</div>
+        <ul class="doc-list">
+          <li><span class="kbd">Run disabled</span>. Turn on <span class="kbd">Run enabled</span> in <button class="btn btn-mini" type="button" data-goto="general">General</button>.</li>
+          <li><span class="kbd">Invalid, unsaved</span>. Go to <button class="btn btn-mini" type="button" data-goto="validation">Validation</button>, fix errors, then Save.</li>
+          <li>Automation exits immediately. Check logs for missing Firefox or geckodriver path issues.</li>
+          <li>Tasks flaky. Prefer <span class="kbd">WAIT_FOR_SELECTOR</span> over fixed waits. Increase element timeout.</li>
+        </ul>
+      </div>
+    </div>
+  </details>
+
+  <div class="hint">
+    Tip. Use <span class="kbd">Ctrl+S</span> to save.
+  </div>
+</div>
+
+            </div>
+          </div>
+        </section>
+
+        </div>
+
+      </main>
+    </div>
+
+    <!-- Themed confirmation modal (replaces native window.confirm) -->
+    <div id="modalOverlay" class="modal-overlay is-hidden" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal" role="document" aria-labelledby="modalTitle">
+        <div class="modal-head">
+          <div class="modal-app" aria-label="App">
+            <div class="modal-app-icon" aria-hidden="true">
+              <img src="../assets/DABwhiteON.png" alt="" />
+            </div>
+            <div class="modal-app-text">
+              <div class="modal-app-name">Dab</div>
+              <div class="modal-app-sub">Config Editor</div>
+            </div>
+          </div>
+          <button id="modalClose" type="button" class="icon-btn" aria-label="Close dialog">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div id="modalTitle" class="modal-title">Confirm</div>
+          <div id="modalMessage" class="modal-message"></div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="modalCancel" type="button" class="btn btn-secondary">Cancel</button>
+          <button id="modalOk" type="button" class="btn btn-primary">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast host (undo, short status) -->
+    <div class="toast-host" id="toastHost" aria-live="polite" aria-label="Notifications"></div>
+
+    <script src="./App.js"></script>
+    <script src="./advanced_tasking.js"></script>
+    <script src="./renderer.js"></script>
+  </body>
+</html>
