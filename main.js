@@ -13,7 +13,6 @@ if (!electron || typeof electron === "string" || !electron.app) {
 
 const { app, BrowserWindow, dialog, ipcMain, Tray, Menu, nativeImage, shell, clipboard, nativeTheme } = electron;
 const path = require("path");
-<<<<<<< HEAD
 
 // ---------------------------------------------------------------------------
 // Chromium cache hardening (Windows "Access is denied" cache errors)
@@ -33,8 +32,6 @@ try {
 } catch {
   // ignore
 }
-=======
->>>>>>> c9af4a5 (Animation fixes)
 const fs = require("fs/promises");
 const History = require("./lib/history");
 const { spawn } = require("child_process");
@@ -532,7 +529,6 @@ ipcMain.handle("automation:run", async (_evt, configPath) => {
     }
   }
 
-<<<<<<< HEAD
 // Ensure bundled geckodriver is executable and discoverable, if present.
   const driverName = process.platform === "win32" ? "geckodriver.exe" : "geckodriver";
   const baseDir = app.isPackaged ? (process.resourcesPath || "") : __dirname;
@@ -561,24 +557,6 @@ ipcMain.handle("automation:run", async (_evt, configPath) => {
     env.PATH = `${path.dirname(gecko)}${path.delimiter}${env.PATH || ""}`;
     env.GECKODRIVER_PATH = gecko;
   }
-=======
-// Ensure local geckodriver is executable and discoverable, if present.
-const geckoName = process.platform === "win32" ? "geckodriver.exe" : "geckodriver";
-const gecko = app.isPackaged
-  ? path.join(process.resourcesPath || "", geckoName)
-  : path.join(__dirname, geckoName);
-try {
-  await fs.access(gecko);
-  // Zipped repos often lose execute bits. Best-effort fix.
-  await fs.chmod(gecko, 0o755).catch(() => {});
-  env.PATH = `${path.dirname(gecko)}${path.delimiter}${env.PATH || ""}`;
-  env.GECKODRIVER_PATH = gecko;
-} catch {
-  // No bundled driver, or not accessible. The user may have geckodriver on PATH.
-}
-
-
->>>>>>> c9af4a5 (Animation fixes)
   automationPaused = false;
   automationStopRequested = false;
 

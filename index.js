@@ -911,7 +911,6 @@ function handleCustomHandler(_cfg, handlerName) {
   return true;
 }
 
-<<<<<<< HEAD
 async function ensureSessionHealthy(driver, cfg, log, taskType, sessionCtx) {
   if (!driver) return driver;
 
@@ -962,8 +961,6 @@ async function ensureSessionHealthy(driver, cfg, log, taskType, sessionCtx) {
 }
 
 
-=======
->>>>>>> c9af4a5 (Animation fixes)
 async function runTask(driver, cfg, log, task, state, oneShotRan, sessionCtx, attempt = 0) {
   const id = String(task.id || 'task');
   const type = String(task.type || '').trim();
@@ -978,11 +975,8 @@ async function runTask(driver, cfg, log, task, state, oneShotRan, sessionCtx, at
     if (!ok) return { ran: false, success: true, driver };
   }
 
-<<<<<<< HEAD
   driver = await ensureSessionHealthy(driver, cfg, log, type, ctx);
 
-=======
->>>>>>> c9af4a5 (Animation fixes)
   try {
     switch (type) {
       case 'LOGIN': {

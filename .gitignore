@@ -1,10 +1,7 @@
 # deps
 node_modules/
 
-<<<<<<< HEAD
 
-=======
->>>>>>> c9af4a5 (Animation fixes)
 # build outputs
 dist/
 out/
@@ -17,7 +14,6 @@ releases/
 *.exe
 *.msi
 *.dmg
-<<<<<<< HEAD
 out/
 build/
 release/
@@ -30,9 +26,6 @@ releases/
 *.dmg
 *.AppImage
 *.blockmap
-=======
-*.AppImage
->>>>>>> c9af4a5 (Animation fixes)
 
 # logs and OS junk
 *.log

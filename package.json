@@ -1,12 +1,7 @@
 {
   "name": "dab",
-<<<<<<< HEAD
   "version": "1.6.3",
   "description": "Dab: Open source Electron UI plus Selenium runner for Discord automation. Schema validation gate, task builder and script mode, live logs, History snapshots.",
-=======
-  "version": "1.4.3",
-  "description": "Discord account botter: an source Electron UI plus Selenium runner for Discord automation. Schema validation gate, task builder and script mode, live logs, History snapshots.",
->>>>>>> c9af4a5 (Animation fixes)
   "main": "main.js",
   "author": "Veok",
   "license": "MIT",
@@ -18,13 +13,9 @@
     "dist": "electron-builder",
     "dist:win": "electron-builder --win",
     "dist:mac": "electron-builder --mac",
-<<<<<<< HEAD
     "dist:linux": "electron-builder --linux",
     "fetch:drivers": "node scripts/fetch-drivers.js --all",
     "dist:linux:docker": "docker run --rm -it -v \"%cd%:/project\" -w /project -e ELECTRON_CACHE=\"/project/.cache/electron\" -e ELECTRON_BUILDER_CACHE=\"/project/.cache/electron-builder\" electronuserland/builder:latest bash -lc \"npm ci && npm run dist:linux\""
-=======
-    "dist:linux": "electron-builder --linux"
->>>>>>> c9af4a5 (Animation fixes)
   },
   "dependencies": {
     "ajv": "^8.17.1",
@@ -44,19 +35,14 @@
     "files": [
       "**/*",
       "!dist/**",
-<<<<<<< HEAD
       "!test/**",
       "!drivers/**",
       "!geckodriver"
-=======
-      "!test/**"
->>>>>>> c9af4a5 (Animation fixes)
     ],
     "win": {
       "target": [
         "nsis"
       ],
-<<<<<<< HEAD
       "icon": "assets/DAB.ico",
       "extraResources": [
         {
@@ -64,9 +50,6 @@
           "to": "drivers/win32-x64/geckodriver.exe"
         }
       ]
-=======
-      "icon": "assets/DAB.ico"
->>>>>>> c9af4a5 (Animation fixes)
     },
     "nsis": {
       "oneClick": false,
@@ -76,7 +59,6 @@
       "target": [
         "dmg",
         "zip"
-<<<<<<< HEAD
       ],
       "extraResources": [
         {
@@ -87,8 +69,6 @@
           "from": "drivers/darwin-arm64/geckodriver",
           "to": "drivers/darwin-arm64/geckodriver"
         }
-=======
->>>>>>> c9af4a5 (Animation fixes)
       ]
     },
     "linux": {
@@ -96,7 +76,6 @@
         "AppImage",
         "deb"
       ],
-<<<<<<< HEAD
       "category": "Utility",
       "icon": "assets/DABwhiteON.png",
       "extraResources": [
@@ -107,12 +86,5 @@
       ]
     },
     "beforePack": "./scripts/ensure-drivers.js"
-=======
-      "category": "Utility"
-    },
-    "extraResources": [
-      "geckodriver"
-    ]
->>>>>>> c9af4a5 (Animation fixes)
   }
 }
