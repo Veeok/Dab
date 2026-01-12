@@ -760,14 +760,63 @@ function setBanner(kind, text) {
   banner.textContent = String(text || "");
 }
 
+function prefersReducedMotion() {
+  try {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch {
+    return false;
+  }
+}
+
 // Toasts are used for low-friction actions like Undo. They are UI-only.
 let __toastTimer = null;
+let __toastDismissTimer = null;
+function dismissToast({ immediate = false } = {}) {
+  const host = $("toastHost");
+  if (!host) return;
+
+  const toast = host.querySelector(".toast");
+  if (!toast) {
+    host.innerHTML = "";
+    return;
+  }
+
+  if (immediate) {
+    if (__toastDismissTimer) {
+      clearTimeout(__toastDismissTimer);
+      __toastDismissTimer = null;
+    }
+    host.innerHTML = "";
+    return;
+  }
+
+  if (prefersReducedMotion()) {
+    dismissToast({ immediate: true });
+    return;
+  }
+
+  if (toast.classList.contains("is-leaving")) return;
+  toast.classList.add("is-leaving");
+
+  const finish = () => {
+    if (__toastDismissTimer) {
+      clearTimeout(__toastDismissTimer);
+      __toastDismissTimer = null;
+    }
+    if (toast.parentElement) toast.parentElement.innerHTML = "";
+  };
+
+  toast.addEventListener("animationend", finish, { once: true });
+  if (__toastDismissTimer) clearTimeout(__toastDismissTimer);
+  __toastDismissTimer = setTimeout(finish, 200);
+}
+
 function showToast({ text, actionText, onAction, timeoutMs = 6000 } = {}) {
   const host = $("toastHost");
   if (!host) return;
 
   // Clear existing toasts to avoid stacking Undo flows.
-  host.innerHTML = "";
+  dismissToast({ immediate: true });
   if (__toastTimer) {
     clearTimeout(__toastTimer);
     __toastTimer = null;
@@ -792,7 +841,7 @@ function showToast({ text, actionText, onAction, timeoutMs = 6000 } = {}) {
     btn.textContent = String(actionText);
     btn.addEventListener("click", () => {
       try { onAction(); } catch {}
-      host.innerHTML = "";
+      dismissToast();
     });
     actions.appendChild(btn);
   }
@@ -801,14 +850,14 @@ function showToast({ text, actionText, onAction, timeoutMs = 6000 } = {}) {
   close.type = "button";
   close.className = "btn btn-mini";
   close.textContent = "Dismiss";
-  close.addEventListener("click", () => { host.innerHTML = ""; });
+  close.addEventListener("click", () => { dismissToast(); });
   actions.appendChild(close);
 
   toast.appendChild(actions);
   host.appendChild(toast);
 
   __toastTimer = setTimeout(() => {
-    host.innerHTML = "";
+    dismissToast();
     __toastTimer = null;
   }, Math.max(1500, Number(timeoutMs) || 6000));
 }
