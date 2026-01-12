@@ -1501,12 +1501,15 @@ textarea.input{
   display: flex;
   align-items: center;
   gap: 12px;
+<<<<<<< HEAD
   animation: toastIn 160ms ease-out;
   will-change: transform, opacity;
 }
 
 .toast.is-leaving{
   animation: toastOut 140ms ease-in;
+=======
+>>>>>>> c9af4a5 (Animation fixes)
 }
 
 .toast-text{
@@ -1739,6 +1742,7 @@ details[open].doc-acc .doc-acc-caret{
   to{ opacity: 1; transform: scale(1); }
 }
 
+<<<<<<< HEAD
 @keyframes toastIn{
   from{ opacity: 0; transform: translateY(8px) scale(0.98); }
   to{ opacity: 1; transform: translateY(0) scale(1); }
@@ -1749,6 +1753,8 @@ details[open].doc-acc .doc-acc-caret{
   to{ opacity: 0; transform: translateY(6px) scale(0.98); }
 }
 
+=======
+>>>>>>> c9af4a5 (Animation fixes)
 .item.anim-pop{
   animation: popIn 200ms ease-out;
 }
@@ -1923,8 +1929,12 @@ details[open].doc-acc .doc-acc-caret{
 @media (prefers-reduced-motion: reduce){
   .view.is-entering,
   .view.is-leaving,
+<<<<<<< HEAD
   .anim-pop,
   .toast{
+=======
+  .anim-pop{
+>>>>>>> c9af4a5 (Animation fixes)
     animation: none !important;
   }
 
@@ -1955,3 +1965,7 @@ details[open].doc-acc .doc-acc-caret{
   padding: 8px 10px;
   font-size: 13px;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> c9af4a5 (Animation fixes)

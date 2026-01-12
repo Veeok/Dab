@@ -126,12 +126,15 @@ let logSearch = "";
 let logViewerLevel = "info";
 let logAutoScroll = true;
 
+<<<<<<< HEAD
 // Small inline SVGs for toolbar buttons.
 // These are simple geometric shapes and safe to inline.
 const ICON_PLAY_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M11.596 8.697 5.233 12.39A.75.75 0 0 1 4 11.692V4.308a.75.75 0 0 1 1.233-.697l6.363 3.692a.75.75 0 0 1 0 1.302"/></svg>';
 const ICON_PAUSE_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5.5 3.5A1.5 1.5 0 0 0 4 5v6a1.5 1.5 0 0 0 3 0V5a1.5 1.5 0 0 0-1.5-1.5m5 0A1.5 1.5 0 0 0 9 5v6a1.5 1.5 0 0 0 3 0V5a1.5 1.5 0 0 0-1.5-1.5"/></svg>';
 
 
+=======
+>>>>>>> c9af4a5 (Animation fixes)
 
 let dragCtx = { kind: null, from: null };
 
@@ -583,7 +586,11 @@ function updateConfigStatePill() {
 }
 
 function updateRunGating() {
+<<<<<<< HEAD
   // Run is gated by readiness. It is start-only.
+=======
+  // Run should be gated by readiness. If invalid or unsaved, disable.
+>>>>>>> c9af4a5 (Animation fixes)
   const runBtn = $("runBtn");
   if (!runBtn) return;
 
@@ -622,6 +629,7 @@ function updateRunGating() {
     return;
   }
 
+<<<<<<< HEAD
   // While running, Run is disabled. Pause/Stop are handled separately.
   if (isRunning) {
     runBtn.disabled = true;
@@ -631,6 +639,10 @@ function updateRunGating() {
 
   // Runner master switch.
   if (config.run_enabled === false) {
+=======
+  // Runner master switch.
+  if (!isRunning && config && config.run_enabled === false) {
+>>>>>>> c9af4a5 (Animation fixes)
     runBtn.disabled = true;
     showReadiness({
       text: "Run enabled is off. Turn it on in General before running.",
@@ -641,6 +653,7 @@ function updateRunGating() {
     return;
   }
 
+<<<<<<< HEAD
   const validated = Boolean(lastValidatedAt);
   const ok = Boolean(lastValidation && lastValidation.ok);
 
@@ -675,6 +688,48 @@ function updateRunGating() {
         { label: "Save", onClick: () => saveNow({ quiet: false }).catch(() => {}), primary: true }
       ]
     });
+=======
+  // While running, Run becomes Pause/Resume.
+  if (isRunning) {
+    runBtn.disabled = false;
+    hideReadiness();
+    return;
+  }
+
+  const validated = Boolean(lastValidatedAt);
+  const ok = Boolean(lastValidation && lastValidation.ok);
+
+  if (!validated || !ok || isDirty) {
+    runBtn.disabled = true;
+    if (!validated) {
+      showReadiness({
+        text: "Not validated. Validate and fix any issues before running.",
+        actions: [
+          { label: "Validate", onClick: () => validateNow({ quiet: false }).catch(() => {}), primary: true },
+          { label: "Go to Validation", onClick: () => setView("validation") }
+        ]
+      });
+      return;
+    }
+    if (!ok) {
+      showReadiness({
+        text: "Validation errors. Fix them in the Validation tab.",
+        actions: [
+          { label: "Go to Validation", onClick: () => setView("validation"), primary: true }
+        ]
+      });
+      return;
+    }
+    if (isDirty) {
+      showReadiness({
+        text: "Valid but unsaved. Save before running.",
+        actions: [
+          { label: "Save", onClick: () => saveNow({ quiet: false }).catch(() => {}), primary: true }
+        ]
+      });
+      return;
+    }
+>>>>>>> c9af4a5 (Animation fixes)
     return;
   }
 
@@ -683,7 +738,10 @@ function updateRunGating() {
 }
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c9af4a5 (Animation fixes)
 function setRunning(next) {
   isRunning = Boolean(next);
   if (!isRunning) isPaused = false;
@@ -711,6 +769,7 @@ function updateAutomationIndicators() {
     }
   }
 
+<<<<<<< HEAD
   // Buttons.
   const runBtn = $("runBtn");
   if (runBtn) {
@@ -736,6 +795,20 @@ function updateAutomationIndicators() {
       if (t) t.textContent = "Pause";
       if (icon) icon.innerHTML = ICON_PAUSE_SVG;
       pauseBtn.className = "btn btn-secondary";
+=======
+  // Automation buttons.
+  const runBtn = $("runBtn");
+  if (runBtn) {
+    if (!isRunning) {
+      runBtn.textContent = "Run";
+      runBtn.className = "btn btn-primary";
+    } else if (isPaused) {
+      runBtn.textContent = "Run";
+      runBtn.className = "btn btn-primary";
+    } else {
+      runBtn.textContent = "Pause";
+      runBtn.className = "btn btn-warning";
+>>>>>>> c9af4a5 (Animation fixes)
     }
   }
 
@@ -760,6 +833,7 @@ function setBanner(kind, text) {
   banner.textContent = String(text || "");
 }
 
+<<<<<<< HEAD
 function prefersReducedMotion() {
   try {
     return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -811,12 +885,20 @@ function dismissToast({ immediate = false } = {}) {
   __toastDismissTimer = setTimeout(finish, 200);
 }
 
+=======
+// Toasts are used for low-friction actions like Undo. They are UI-only.
+let __toastTimer = null;
+>>>>>>> c9af4a5 (Animation fixes)
 function showToast({ text, actionText, onAction, timeoutMs = 6000 } = {}) {
   const host = $("toastHost");
   if (!host) return;
 
   // Clear existing toasts to avoid stacking Undo flows.
+<<<<<<< HEAD
   dismissToast({ immediate: true });
+=======
+  host.innerHTML = "";
+>>>>>>> c9af4a5 (Animation fixes)
   if (__toastTimer) {
     clearTimeout(__toastTimer);
     __toastTimer = null;
@@ -841,7 +923,11 @@ function showToast({ text, actionText, onAction, timeoutMs = 6000 } = {}) {
     btn.textContent = String(actionText);
     btn.addEventListener("click", () => {
       try { onAction(); } catch {}
+<<<<<<< HEAD
       dismissToast();
+=======
+      host.innerHTML = "";
+>>>>>>> c9af4a5 (Animation fixes)
     });
     actions.appendChild(btn);
   }
@@ -850,14 +936,22 @@ function showToast({ text, actionText, onAction, timeoutMs = 6000 } = {}) {
   close.type = "button";
   close.className = "btn btn-mini";
   close.textContent = "Dismiss";
+<<<<<<< HEAD
   close.addEventListener("click", () => { dismissToast(); });
+=======
+  close.addEventListener("click", () => { host.innerHTML = ""; });
+>>>>>>> c9af4a5 (Animation fixes)
   actions.appendChild(close);
 
   toast.appendChild(actions);
   host.appendChild(toast);
 
   __toastTimer = setTimeout(() => {
+<<<<<<< HEAD
     dismissToast();
+=======
+    host.innerHTML = "";
+>>>>>>> c9af4a5 (Animation fixes)
     __toastTimer = null;
   }, Math.max(1500, Number(timeoutMs) || 6000));
 }
@@ -885,7 +979,10 @@ function setEnabled(enabled) {
     "applyScriptBtn",
     "historyRefreshBtn",
     "runBtn",
+<<<<<<< HEAD
     "pauseBtn",
+=======
+>>>>>>> c9af4a5 (Animation fixes)
     "stopBtn"
   ].forEach((id) => {
     const e = $(id);
@@ -897,10 +994,14 @@ function setEnabled(enabled) {
   if (runBtn && on && !isRunning && config && config.run_enabled === false) runBtn.disabled = true;
 
   // Stop stays enabled only when running.
+<<<<<<< HEAD
   const stopBtn = $("stopBtn");
   if (stopBtn) stopBtn.disabled = !on || !isRunning;
   const pauseBtn = $("pauseBtn");
   if (pauseBtn) pauseBtn.disabled = !on || !isRunning;
+=======
+  $("stopBtn").disabled = !on || !isRunning;
+>>>>>>> c9af4a5 (Animation fixes)
 }
 
 function setView(viewName) {
@@ -1208,7 +1309,11 @@ function setRunStatus(kind, headline) {
   text.textContent = kind === "ok"
     ? "Automation is running. Watch logs below."
     : kind === "warn"
+<<<<<<< HEAD
       ? "Automation is paused. Click Resume to continue, or Stop to end."
+=======
+      ? "Automation is paused. Click Run to resume, or Stop to end."
+>>>>>>> c9af4a5 (Animation fixes)
     : kind === "bad"
       ? "Automation failed. See logs and validation output."
       : "Start the automation to view logs here.";
@@ -1666,6 +1771,7 @@ async function refreshHistory() {
   });
 }
 
+<<<<<<< HEAD
 function prettyFieldLabel(label) {
   const key = String(label ?? "");
   const overrides = {
@@ -1692,13 +1798,19 @@ function prettyFieldLabel(label) {
   return key;
 }
 
+=======
+>>>>>>> c9af4a5 (Animation fixes)
 function mkField(label, inputEl, hint) {
   const wrap = document.createElement("label");
   wrap.className = "field";
 
   const l = document.createElement("div");
   l.className = "field-label";
+<<<<<<< HEAD
   l.textContent = prettyFieldLabel(label);
+=======
+  l.textContent = label;
+>>>>>>> c9af4a5 (Animation fixes)
 
   wrap.appendChild(l);
   wrap.appendChild(inputEl);
@@ -2580,7 +2692,11 @@ function renderAccounts() {
 
     const enabledLabel = document.createElement("div");
     enabledLabel.className = "field-label";
+<<<<<<< HEAD
     enabledLabel.textContent = "Enabled";
+=======
+    enabledLabel.textContent = "enabled";
+>>>>>>> c9af4a5 (Animation fixes)
 
     const enabledToggle = mkCheck({
       checked: Boolean(enabled),
@@ -3214,7 +3330,11 @@ if (tState) {
     enabledField.className = "field";
     const enabledLabel = document.createElement("div");
     enabledLabel.className = "field-label";
+<<<<<<< HEAD
     enabledLabel.textContent = "Enabled";
+=======
+    enabledLabel.textContent = "enabled";
+>>>>>>> c9af4a5 (Animation fixes)
     const enabledToggle = mkCheck({
       checked: t.enabled !== false,
       label: "Enabled",
@@ -4080,12 +4200,17 @@ async function resumeAutomation() {
   setBanner("ok", "Resumed.");
 }
 
+<<<<<<< HEAD
 async function onRunClick() {
   if (!isRunning) return startAutomation();
 }
 
 async function onPauseClick() {
   if (!isRunning) return;
+=======
+async function onRunPauseClick() {
+  if (!isRunning) return startAutomation();
+>>>>>>> c9af4a5 (Animation fixes)
   if (isPaused) return resumeAutomation();
   return pauseAutomation();
 }
@@ -4393,9 +4518,13 @@ function wireButtons() {
   const taskToggleAll = $("tasksToggleAllBtn");
   if (taskToggleAll) taskToggleAll.addEventListener("click", () => toggleAll("tasks"));
 
+<<<<<<< HEAD
   $("runBtn").addEventListener("click", onRunClick);
   const pauseBtn = $("pauseBtn");
   if (pauseBtn) pauseBtn.addEventListener("click", onPauseClick);
+=======
+  $("runBtn").addEventListener("click", onRunPauseClick);
+>>>>>>> c9af4a5 (Animation fixes)
   $("stopBtn").addEventListener("click", stopAutomation);
 
 
